@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Ahnaf Rabbani | Data Center & IT Engineer</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:       #060810;
+      --surface:  #0c1018;
+      --card:     #101520;
+      --border:   #1a2535;
+      --cyan:     #00e5ff;
+      --cyan-dim: #00b8cc;
+      --green:    #00ff9d;
+      --purple:   #9b5de5;
+      --text:     #dce8f0;
+      --muted:    #4a6075;
+      --font-display: 'Orbitron', sans-serif;
+      --font-mono:    'Share Tech Mono', monospace;
+      --font-body:    'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── SCROLLBAR ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none; z-index: 0;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.2rem 3rem;
+      background: rgba(6, 8, 16, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--cyan);
+    }
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+    .nav-links a {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      justify-content: center;
+      padding: 8rem 3rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .grid-bg {
+      position: absolute; inset: 0;
+      background-image:
+        linear-gradient(rgba(0,229,255,0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,229,255,0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.2em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.2s forwards;
+    }
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: #fff;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.4s forwards;
+    }
+    .hero-name span { color: var(--cyan); }
+
+    .hero-title {
+      font-family: var(--font-mono);
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      color: var(--muted);
+      margin-top: 1.2rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.6s forwards;
+    }
+    #typed-title { color: var(--green); }
+    .cursor { display: inline-block; width: 2px; height: 1.1em; background: var(--green); vertical-align: text-bottom; animation: blink 1s step-end infinite; }
+
+    .hero-links {
+      display: flex; gap: 1.5rem;
+      margin-top: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 0.8s forwards;
+    }
+    .btn {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.75rem 2rem;
+      border-radius: 3px;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--cyan);
+      color: var(--bg);
+      font-weight: 700;
+    }
+    .btn-primary:hover { background: #fff; box-shadow: 0 0 24px var(--cyan); }
+    .btn-outline {
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+    .btn-outline:hover { border-color: var(--cyan); color: var(--cyan); }
+
+    .hero-stat-row {
+      display: flex; gap: 3rem;
+      margin-top: 4rem;
+      opacity: 0;
+      animation: fadeUp 0.6s 1s forwards;
+    }
+    .stat { display: flex; flex-direction: column; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--cyan);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-top: 0.3rem;
+    }
+
+    /* ── SECTIONS ── */
+    section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 6rem 2rem;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+    }
+    h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.1;
+      margin-bottom: 2.5rem;
+    }
+    h2 .dim { color: var(--muted); }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+      align-items: start;
+    }
+    .about-text p { color: #8fa5ba; font-size: 0.95rem; margin-bottom: 1rem; }
+    .about-text p strong { color: var(--text); font-weight: 500; }
+
+    .about-details { display: flex; flex-direction: column; gap: 1rem; }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding: 0.9rem 1.2rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+    }
+    .detail-icon { color: var(--cyan); font-size: 1rem; width: 20px; text-align: center; }
+    .detail-key {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      min-width: 80px;
+    }
+    .detail-val { font-size: 0.88rem; color: var(--text); }
+
+    /* ── SKILLS ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 0.75rem;
+    }
+    .skill-tag {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+      padding: 0.6rem 1rem;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: #7a9ab5;
+      transition: all 0.2s;
+      cursor: default;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .skill-tag::before { content: '›'; color: var(--cyan); }
+    .skill-tag:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0, 229, 255, 0.06);
+      transform: translateX(4px);
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-list { display: flex; flex-direction: column; gap: 1.5rem; }
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.8rem 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .exp-card::before {
+      content: '';
+      position: absolute; top: 0; left: 0;
+      width: 3px; height: 100%;
+      background: var(--cyan);
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .exp-card:hover { border-color: rgba(0,229,255,0.3); box-shadow: 0 0 30px rgba(0,229,255,0.06); }
+    .exp-card:hover::before { opacity: 1; }
+
+    .exp-header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.4rem; }
+    .exp-role {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .exp-date {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+      color: var(--cyan);
+      background: rgba(0,229,255,0.08);
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      border: 1px solid rgba(0,229,255,0.2);
+      white-space: nowrap;
+    }
+    .exp-company {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+      margin-bottom: 1rem;
+    }
+    .exp-bullets { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .exp-bullets li {
+      font-size: 0.875rem;
+      color: #7a94a8;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .exp-bullets li::before { content: '—'; position: absolute; left: 0; color: var(--cyan); }
+
+    /* ── PROJECTS ── */
+    .projects-placeholder {
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+      padding: 4rem 2rem;
+      text-align: center;
+    }
+    .projects-placeholder .big-icon {
+      font-size: 3rem;
+      margin-bottom: 1rem;
+      opacity: 0.3;
+    }
+    .projects-placeholder p {
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    .projects-placeholder .coming {
+      font-family: var(--font-display);
+      font-size: 1.2rem;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.1em;
+    }
+    footer a { color: var(--cyan); text-decoration: none; }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      width: 100%; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: none;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      #hero { padding: 7rem 1.5rem 3rem; }
+      .hero-stat-row { gap: 2rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      section { padding: 4rem 1.5rem; }
+      .exp-card { padding: 1.4rem 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">AR/</div>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#projects">Projects</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section id="hero">
+    <div class="grid-bg"></div>
+    <div class="hero-tag">// Portfolio v1.0</div>
+    <h1 class="hero-name">Ahnaf<br/><span>Rabbani</span></h1>
+    <div class="hero-title">
+      &gt; <span id="typed-title"></span><span class="cursor"></span>
+    </div>
+    <div class="hero-links">
+      <a class="btn btn-primary" href="mailto:ahnafahmedadit2004@gmail.com">Contact Me</a>
+      <a class="btn btn-outline" href="https://www.linkedin.com/in/ahnaf-rabbani-it" target="_blank">LinkedIn</a>
+    </div>
+    <div class="hero-stat-row">
+      <div class="stat"><span class="stat-num">6+</span><span class="stat-label">Years in IT</span></div>
+      <div class="stat"><span class="stat-num">3</span><span class="stat-label">Languages</span></div>
+      <div class="stat"><span class="stat-num">L3</span><span class="stat-label">DC Technician</span></div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="reveal">
+      <div class="section-label">// 01 — About</div>
+      <h2>Who I <span class="dim">Am</span></h2>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>
+          Analytically driven <strong>Data Center & IT professional</strong> with over six years of hands-on experience spanning enterprise infrastructure, hardware diagnostics, and large-scale server operations.
+        </p>
+        <p>
+          Currently an <strong>IC2 Oracle Data Center Technician</strong> on The Stargate Project — supporting mission-critical AI infrastructure at hyperscale. Previously an <strong>L3 Data Center Ops Technician at AWS</strong>, where I maintained GPU clusters, HPC systems, and performed advanced break-fix across production environments.
+        </p>
+        <p>
+          BS in <strong>Criminology, Law & Society</strong> (minor in IT) from George Mason University. Multilingual: English, Bangla, Hindi, Arabic.
+        </p>
+      </div>
+      <div class="about-details">
+        <div class="detail-row">
+          <span class="detail-icon">◈</span>
+          <span class="detail-key">Location</span>
+          <span class="detail-val">Abilene, TX</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">◈</span>
+          <span class="detail-key">Role</span>
+          <span class="detail-val">IC2 Oracle DC Technician</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">◈</span>
+          <span class="detail-key">Project</span>
+          <span class="detail-val">The Stargate Project</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">◈</span>
+          <span class="detail-key">Degree</span>
+          <span class="detail-val">B.S. George Mason Univ.</span>
+        </div>
+        <div class="detail-row">
+          <span class="detail-icon">◈</span>
+          <span class="detail-key">Languages</span>
+          <span class="detail-val">EN / BN / HI / AR</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- SKILLS -->
+  <section id="skills">
+    <div class="reveal">
+      <div class="section-label">// 02 — Skills</div>
+      <h2>Technical <span class="dim">Stack</span></h2>
+    </div>
+    <div class="skills-grid reveal">
+      <div class="skill-tag">AWS Infrastructure Ops</div>
+      <div class="skill-tag">AI / ML Server Maintenance</div>
+      <div class="skill-tag">HPC Systems</div>
+      <div class="skill-tag">Linux CLI</div>
+      <div class="skill-tag">Data Center Maintenance</div>
+      <div class="skill-tag">Hardware Diagnostics</div>
+      <div class="skill-tag">GPU / CPU / DIMM Repair</div>
+      <div class="skill-tag">Firmware & BIOS Updates</div>
+      <div class="skill-tag">Network Troubleshooting</div>
+      <div class="skill-tag">TOR Switch Config</div>
+      <div class="skill-tag">Data Backup & Recovery</div>
+      <div class="skill-tag">Command Line & Scripting</div>
+      <div class="skill-tag">System Administration</div>
+      <div class="skill-tag">SLA & Ticket Resolution</div>
+      <div class="skill-tag">Windows / macOS / Linux</div>
+      <div class="skill-tag">Remote Support</div>
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="reveal">
+      <div class="section-label">// 03 — Experience</div>
+      <h2>Work <span class="dim">History</span></h2>
+    </div>
+
+    <div class="exp-list">
+
+      <div class="exp-card reveal">
+        <div class="exp-header">
+          <div class="exp-role">IC2 Data Center Technician</div>
+          <div class="exp-date">Jun 2026 – Present</div>
+        </div>
+        <div class="exp-company">Oracle — The Stargate Project · Abilene, TX</div>
+        <ul class="exp-bullets">
+          <li>Supporting mission-critical AI infrastructure on The Stargate Project at hyperscale.</li>
+          <li>Performing advanced hardware operations, maintenance, and systems validation in a cutting-edge data center environment.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-header">
+          <div class="exp-role">Data Center Operations Technician L3</div>
+          <div class="exp-date">Oct 2025 – May 2026</div>
+        </div>
+        <div class="exp-company">Amazon Web Services · Sterling, VA</div>
+        <ul class="exp-bullets">
+          <li>Advanced break-fix diagnostics and hardware repairs across AI/ML, GPU, and high-density compute hosts in production hyperscale environments.</li>
+          <li>Used internal tools (Cloudforge, DCODiag, RainbowRoad) for hardware isolation testing and fault remediation.</li>
+          <li>Replaced and validated CPUs, GPUs, DIMMs, NICs, and motherboards to AWS hardware configuration standards.</li>
+          <li>Configured TOR network switches, managed VLANs, and resolved network infrastructure issues across server clusters.</li>
+          <li>Executed firmware/BIOS updates, stress tests, and data sanitization across diverse server platforms.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-header">
+          <div class="exp-role">Advanced Repair Agent</div>
+          <div class="exp-date">Apr 2022 – May 2026</div>
+        </div>
+        <div class="exp-company">Best Buy Geek Squad · Woodbridge, VA</div>
+        <ul class="exp-bullets">
+          <li>In-depth hardware/software diagnostics, system optimization, and mobile device repairs across consumer and enterprise devices.</li>
+          <li>Delivered second-level support including system administration, driver management, and security configuration on Windows 7–11.</li>
+          <li>Used command-line scripting to automate troubleshooting processes and deployed portable Windows environments for advanced repairs.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-header">
+          <div class="exp-role">IT Support</div>
+          <div class="exp-date">Jul 2021 – May 2026</div>
+        </div>
+        <div class="exp-company">School of Leadership (SOLE USA) · Manassas, VA</div>
+        <ul class="exp-bullets">
+          <li>First-line IT support for staff and volunteers, resolving hardware, software, and network connectivity issues.</li>
+          <li>Managed user accounts, onboarded new users, and maintained network security across the organization.</li>
+        </ul>
+      </div>
+
+      <div class="exp-card reveal">
+        <div class="exp-header">
+          <div class="exp-role">IT Technician</div>
+          <div class="exp-date">Feb 2019 – Jun 2024</div>
+        </div>
+        <div class="exp-company">Gyro Guys & Shawarma Guys · Manassas, VA & Waldorf, MD</div>
+        <ul class="exp-bullets">
+          <li>Installed and maintained workstations, POS systems, security cameras, and printer infrastructure.</li>
+          <li>Delivered cost-effective IT solutions to improve business productivity and system reliability.</li>
+        </ul>
+      </div>
+
+    </div>
+  </section>
+
+  <div class="section-divider"></div>
+
+  <!-- PROJECTS -->
+  <section id="projects">
+    <div class="reveal">
+      <div class="section-label">// 04 — Projects</div>
+      <h2>Personal <span class="dim">Projects</span></h2>
+    </div>
+    <div class="projects-placeholder reveal">
+      <div class="big-icon">⬡</div>
+      <div class="coming">Coming Soon</div>
+      <p>Projects loading... check back shortly.</p>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>Built by Ahnaf Rabbani &nbsp;·&nbsp; <a href="mailto:ahnafahmedadit2004@gmail.com">ahnafahmedadit2004@gmail.com</a> &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/ahnaf-rabbani-it" target="_blank">LinkedIn</a></p>
+    <p style="margin-top:0.5rem; opacity:0.4;">© 2026 — All rights reserved</p>
+  </footer>
+
+  <script>
+    // ── TYPED TITLE ──
+    const titles = [
+      'IC2 Oracle DC Technician',
+      'Stargate Project Engineer',
+      'AWS L3 DC Ops Technician',
+      'IT Infrastructure Specialist',
+    ];
+    let ti = 0, ci = 0, deleting = false;
+    const el = document.getElementById('typed-title');
+
+    function type() {
+      const cur = titles[ti];
+      if (!deleting) {
+        el.textContent = cur.slice(0, ++ci);
+        if (ci === cur.length) { deleting = true; setTimeout(type, 2200); return; }
+      } else {
+        el.textContent = cur.slice(0, --ci);
+        if (ci === 0) { deleting = false; ti = (ti + 1) % titles.length; }
+      }
+      setTimeout(type, deleting ? 40 : 75);
+    }
+    setTimeout(type, 1200);
+
+    // ── SCROLL REVEAL ──
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  </script>
+</body>
+</html>
